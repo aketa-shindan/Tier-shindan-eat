@@ -597,3 +597,12 @@ body {
         font-size: 1.6rem;
     }
 }
+
+/* タップ選択時のスタイル */
+.value-item.selected {
+    outline: 4px solid #ff4757;
+    outline-offset: -2px;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
+    z-index: 10;
+}
