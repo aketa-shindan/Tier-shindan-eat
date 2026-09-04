@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+ <meta charset="utf-8" />
+ <title>熱烈中華食堂日高屋 | 株式会社 ハイデイ日高</title>
+ <meta name="description" content="熱烈中華食堂日高屋のウェブサイトです。豊富なメニューと店舗情報を掲載中。" />
+ <!-- ▼ ogp -->
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="熱烈中華食堂日高屋 | 株式会社 ハイデイ日高">
+ <meta property="og:description" content="熱烈中華食堂日高屋のウェブサイトです。豊富なメニューと店舗情報を掲載中。">
+ <meta property="og:image" content="https://hidakaya.hiday.co.jp/img/ogp.png">
+ <meta property="og:image:alt" content="熱烈中華食堂日高屋">
+ <meta property="og:url" content="https://hidakaya.hiday.co.jp/">
+ <meta property="og:site_name" content="熱烈中華食堂日高屋">
+ <!-- ▲ ogp -->
+ <link rel="shortcut icon" href="img/favicon.ico" />
+ <link rel="stylesheet" href="/css/index.css" type="text/css" media="all" />
+ <link rel="stylesheet" href="/css/slick.css" type="text/css" media="all" />
+ <script src="/js/jquery.min.js"></script>
+ <script src="/lib/element.js"></script>
+</head>
+
+<body class="page_index service_hidaka jp">
+ <div id="wrapper">
+  <!-- #BeginLibraryItem "/Library/header.lbi" -->
+  <header>
+   <div id="header">
+    <p class="sitelogo"> <a href="https://hiday.jp/index.html"><img src="/img/sitelogo.png" alt="熱烈中華食堂日高屋 | 株式会社 ハイデイ日高"></a> </p>
+    <!-- /.sitelogo -->
+   <!-- /#header -->
+  </header>
+  <!-- #EndLibraryItem -->
+  <div class="container">
+   <div class="slider topslider">
+     <br/>
+     <br/>
+     <div style="text-align: center;">
+      <h2 style="color: #ec3636;"><b>お探しのページが見つかりません。</b></h2>
+      <br/>
+      <h3>
+        いつも熱烈中華食堂日高屋の公式HPをご利用いただき、ありがとうございます。
+        <br/>
+        <br/>
+        誠に申し訳ございませんが、<br/>
+        お客様がアクセスしようとされたページは、掲載期間が終了し削除されたか、
+      <br/>
+      別の場所に移動になった可能性がございます。
+      <br/>
+    </h3><br/>
+      <p class="btn01"><a href="https://hiday.jp/index.html">トップページへ戻る</a></p>
+     </div>
+  </div>
+  </div>
+</body>
+
+</html>

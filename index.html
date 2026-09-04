@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食のセンス診断</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- ドラッグ＆ドロップ実装用のSortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!-- 画像共有用のhtml2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- 入力・診断画面 -->
+    <div id="app-view" class="app-container">
+        <header class="header">
+            <h1 class="header__title">食のセンス診断</h1>
+            <p class="header__description">あなたが好きな飲食チェーン店をランク付けして、あなたの「食のセンス」を診断しよう！</p>
+        </header>
+
+        <main class="main-content">
+            <!-- ティア表エリア (共有時に画像化するためID付与) -->
+            <section id="capture-tier-list" class="tier-list">
+                <!-- Sランク -->
+                <div class="tier-row">
+                    <div class="tier-row__label tier-row__label--s">S</div>
+                    <div class="tier-row__dropzone" data-tier="S"></div>
+                </div>
+                <!-- Aランク -->
+                <div class="tier-row">
+                    <div class="tier-row__label tier-row__label--a">A</div>
+                    <div class="tier-row__dropzone" data-tier="A"></div>
+                </div>
+                <!-- Bランク -->
+                <div class="tier-row">
+                    <div class="tier-row__label tier-row__label--b">B</div>
+                    <div class="tier-row__dropzone" data-tier="B"></div>
+                </div>
+                <!-- Cランク -->
+                <div class="tier-row">
+                    <div class="tier-row__label tier-row__label--c">C</div>
+                    <div class="tier-row__dropzone" data-tier="C"></div>
+                </div>
+                <!-- Dランク -->
+                <div class="tier-row">
+                    <div class="tier-row__label tier-row__label--d">D</div>
+                    <div class="tier-row__dropzone" data-tier="D"></div>
+                </div>
+            </section>
+
+            <div class="action-area">
+                <button id="diagnose-btn" class="btn btn--primary" disabled>診断する</button>
+                <p class="action-area__hint">※すべてのアイテムを配置するとボタンが押せるようになります</p>
+            </div>
+
+            <section class="item-pool-section">
+                <h2 class="item-pool-section__title">飲食チェーン店</h2>
+                <div id="item-pool" class="item-pool" data-tier="pool">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 診断結果・全画面ビュー -->
+    <div id="result-view" class="result-container hidden">
+        <header class="result-header">
+            <h2>診断結果</h2>
+        </header>
+        
+        <div class="result-content-wrapper">
+            <!-- 1. 性格タイプ詳細 -->
+            <section class="result-section hero-section">
+                <div class="hero-image-wrapper">
+                    <img id="result-image" src="" alt="タイプイラスト" class="hero-image">
+                </div>
+                <p class="meta-tier-badge" id="result-meta-tier"></p>
+                <h1 class="result-type-title" id="result-type-name"></h1>
+                <p class="result-desc-text" id="result-description"></p>
+                
+                <!-- シェアボタン群 -->
+                <div class="share-actions">
+                    <button id="share-twitter-btn" class="btn btn--twitter">𝕏 で結果をシェア</button>
+                    <button id="download-img-btn" class="btn btn--secondary">ティア表を画像で保存</button>
+                </div>
+            </section>
+
+            <!-- 2. 相性の良いタイプ -->
+            <section class="result-section compatibility-section">
+                <h3 class="section-title">🤝 相性の良いタイプ</h3>
+                <div class="compatibility-card">
+                    <p id="result-compatibility" class="compatibility-name"></p>
+                    <p class="compatibility-desc">価値観を補い合える、素晴らしいパートナーになり得る存在です。</p>
+                </div>
+            </section>
+
+            <!-- 3. 自身の作成したティア表（コピーを表示） -->
+            <section class="result-section user-tier-section">
+                <h3 class="section-title">📊 あなたの食のセンスティア表</h3>
+                <!-- JSでコピーしてここに配置する -->
+                <div id="user-tier-display"></div>
+            </section>
+
+            <!-- 4. 16タイプの現環境ティア表 -->
+            <section class="result-section all-types-tier-section">
+                <h3 class="section-title">🌍 16タイプの現環境ティア表</h3>
+                <p class="section-desc">現代社会を生き抜く上での各タイプの「生きやすさ」や「強さ」のメタランキングです。</p>
+                <div id="all-types-tier-display" class="meta-tier-list">
+                    <!-- JSで静的に生成 -->
+                </div>
+            </section>
+
+            <div class="result-footer">
+                <button id="retry-btn" class="btn btn--primary">最初からやり直す</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+/* 変数定義（カラーパレット等） */
+:root {
+    --bg-main: #1a1a1a;
+    --bg-dropzone: #2b2b2b;
+    --border-color: #000000;
+    --text-color: #ffffff;
+    --text-muted: #a0a0a0;
+    
+    /* ティアごとのラベルカラー */
+    --tier-s: #ff7e79; /* 薄い赤/ピンク系 */
+    --tier-a: #ffb371; /* オレンジ系 */
+    --tier-b: #ffdf85; /* 薄いオレンジ/ゴールド系 */
+    --tier-c: #ffff8f; /* 黄色系 */
+    --tier-d: #b5ff85; /* 黄緑系 */
+
+    /* UIカラー */
+    --btn-primary: #4a90e2;
+    --btn-primary-hover: #357abd;
+    --btn-disabled: #555555;
+    --btn-twitter: #1da1f2;
+    --btn-twitter-hover: #1a91da;
+    --item-bg: #444444;
+}
+
+/* リセット＆ベーススタイル */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    /* bodyはリザルト画面のためにスクロール許可 */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ==================================================
+   背景アニメーション (アイコンが流れる)
+   ================================================== */
+.bg-animation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    opacity: 0.15; /* 背景として薄く表示 */
+    pointer-events: none; /* クリックなどを透過 */
+}
+
+.bg-marquee-row {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.bg-marquee-content {
+    display: flex;
+    gap: 40px;
+    padding-right: 40px; /* ギャップと同じ余白でループを滑らかに */
+    min-width: 100%;
+}
+
+.bg-marquee-left .bg-marquee-content {
+    animation: scroll-left 90s linear infinite;
+}
+.bg-marquee-right .bg-marquee-content {
+    animation: scroll-right 100s linear infinite;
+}
+
+.bg-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: contain;
+    background-color: #ffffff;
+    flex-shrink: 0;
+    filter: grayscale(50%) brightness(0.6); /* 目立ちすぎないように調整 */
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+@keyframes scroll-right {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(0); }
+}
+
+/* ==================================================
+   レイアウト (画面内に収める)
+   ================================================== */
+.app-container {
+    max-width: 98%;
+    margin: 0 auto;
+    min-height: 100vh; /* 中身が増えたら伸びるように */
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto; /* スクロール可能に */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 10px;
+    flex-shrink: 0; /* 縮ませない */
+}
+
+.header__title {
+    color: var(--tier-s);
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+}
+
+.header__description {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* 残りの高さをすべて使う */
+    min-height: 0; /* フレックス子要素がはみ出さないために重要 */
+}
+
+.tier-list {
+    background-color: #111;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    height: auto; /* 自動で伸びる */
+    
+    /* 幅を少し狭くして中央に配置 */
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto 10px auto;
+}
+
+/* ティア行 */
+.tier-row {
+    display: flex;
+    background-color: var(--tier-bg);
+    margin-bottom: 4px;
+    border-radius: 6px;
+    /* overflow: hidden; を削除（ツールチップが外にはみ出せるようにするため） */
+    border: 1px solid var(--border-color);
+    min-height: 90px; /* アイコンが1列でも最低限の高さを確保しつつ、増えれば自動で伸びる */
+}
+
+.tier-row:last-child {
+    margin-bottom: 0;
+}
+
+.tier-row__label {
+    width: 60px; /* 少し細く */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+    border-top-left-radius: 5px; /* 親のoverflowを消した分の角丸補正 */
+    border-bottom-left-radius: 5px;
+}
+
+.tier-row__dropzone {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    gap: 8px;
+    overflow: visible; /* ツールチップが切れないように可視化 */
+}
+.tier-row__label--s { background-color: var(--tier-s); }
+.tier-row__label--a { background-color: var(--tier-a); }
+.tier-row__label--b { background-color: var(--tier-b); }
+.tier-row__label--c { background-color: var(--tier-c); }
+.tier-row__label--d { background-color: var(--tier-d); }
+
+/* ドロップゾーン（右側のエリア） */
+.tier-row__dropzone {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    min-height: 80px;
+}
+
+/* ==================================================
+   アクション・アイテムプール
+   ================================================== */
+.action-area {
+    text-align: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.action-area__hint {
+    font-size: 0.8rem;
+    color: var(--tier-b);
+    margin-top: 5px;
+}
+
+.item-pool-section {
+    flex-shrink: 0;
+}
+
+.item-pool-section__title {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+.item-pool {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: visible; /* ツールチップ用 */
+    gap: 10px;
+    padding: 20px 5px 5px 5px; /* 上部にツールチップ用の余白 */
+    justify-content: center;
+}
+
+/* ドラッグするアイテム（アイコンメイン） */
+.value-item {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.2s;
+    position: relative;
+    
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+}
+
+.value-item__icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    display: block;
+}
+
+.value-item:hover {
+    transform: scale(1.15);
+}
+
+.value-item:active {
+    cursor: grabbing;
+}
+
+/* ホバー時のテキスト（ツールチップ） */
+.value-item__text {
+    position: absolute;
+    bottom: 100%; /* アイコンの真上に配置 */
+    left: 50%;
+    transform: translate(-50%, -5px);
+    background-color: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none; /* ホバーの邪魔にならないように */
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 9999; /* 確実に一番前面に表示 */
+    border: 1px solid #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.value-item:hover .value-item__text {
+    opacity: 1;
+    transform: translate(-50%, -10px); /* 少し上にフワッと浮くアニメーション */
+}
+
+/* ティア表（ドロップゾーン）に入った際のサイズ調整 */
+.tier-row__dropzone .value-item {
+    flex: 0 1 76px; /* 基本は76pxだが、12個並んだ時は自動で縮む */
+    width: 76px;
+    height: 76px;
+}
+
+/* ドラッグ中のアイテムのスタイル（SortableJSが付与） */
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #666;
+}
+.sortable-drag {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transform: scale(1.05);
+}
+
+/* アクションエリア（ボタン周り） */
+.action-area {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.action-area__hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+}
+
+/* ボタン汎用 */
+.btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #fff;
+}
+
+.btn:disabled {
+    background-color: var(--btn-disabled);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn--primary {
+    background-color: var(--btn-primary);
+}
+
+.btn--primary:not(:disabled):hover {
+    background-color: var(--btn-primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn--secondary {
+    background-color: #555;
+}
+
+.btn--secondary:hover {
+    background-color: #666;
+}
+
+.btn--twitter {
+    background-color: var(--btn-twitter);
+}
+
+.btn--twitter:hover {
+    background-color: var(--btn-twitter-hover);
+}
+
+/* ==================================================
+   全画面表示 / 結果ビュー
+   ================================================== */
+.hidden {
+    display: none !important;
+}
+
+.result-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: transparent; /* 背景アニメーションを透過させる */
+    color: var(--text-color);
+    padding-bottom: 50px;
+}
+
+.result-header {
+    background-color: #222;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.result-content-wrapper {
+    max-width: 800px; /* 結果画面は読みやすさ重視で幅を絞る */
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.result-section {
+    background-color: #222;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.section-title {
+    font-size: 1.4rem;
+    color: var(--tier-b);
+    margin-bottom: 20px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.section-desc {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+/* ヒーローセクション（結果メイン） */
+.hero-section {
+    text-align: center;
+    border-color: var(--tier-a);
+}
+
+.hero-image-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 4px solid #444;
+    background-color: #000;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+.hero-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    background-color: #ffffff;
+    display: block;
+}
+
+.meta-tier-badge {
+    display: inline-block;
+    background-color: var(--tier-s);
+    color: #000;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.result-type-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.result-desc-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #ddd;
+    text-align: left;
+    margin-bottom: 30px;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* シェアボタン群 */
+.share-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.share-actions .btn {
+    min-width: 200px;
+}
+
+/* 相性セクション */
+.compatibility-card {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid var(--tier-s);
+}
+.compatibility-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+.compatibility-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ユーザーのティア表表示用 */
+#user-tier-display .tier-list {
+    pointer-events: none; /* リードオンリーにする */
+    margin-bottom: 0;
+}
+#user-tier-display .value-item__text {
+    /* 結果画面では文字を常に表示するかツールチップのままにするか */
+    /* ここではツールチップのままにしますが、少し見やすくします */
+}
+
+/* 16タイプのメタティア表 */
+.meta-tier-list {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--border-color);
+    background-color: var(--border-color);
+    gap: 2px;
+    border-radius: 4px;
+}
+.meta-tier-list .tier-row__dropzone {
+    padding: 10px;
+    gap: 10px;
+}
+
+.meta-tier-icon-wrapper {
+    position: relative;
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.meta-tier-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+    background-color: #ffffff;
+    border: 1px solid #444;
+}
+
+.meta-tier-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -5px);
+    background-color: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 9999;
+    border: 1px solid #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.meta-tier-icon-wrapper:hover .meta-tier-tooltip {
+    opacity: 1;
+    transform: translate(-50%, -10px);
+}
+
+.result-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+    .share-actions {
+        flex-direction: column;
+    }
+    .share-actions .btn {
+        width: 100%;
+    }
+    .result-type-title {
+        font-size: 1.6rem;
+    }
+}
