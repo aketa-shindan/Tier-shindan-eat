@@ -502,25 +502,63 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
     // 6. イベントリスナー
     // ---------------------------------------------------------
-    diagnoseBtn.addEventListener('click', () => {
-        const result = calculateResult();
+    diagnoseBtn.addEventListener('click', async () => {
+        const originalText = diagnoseBtn.textContent;
+        diagnoseBtn.textContent = '診断結果を作成中...';
+        diagnoseBtn.disabled = true;
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        resultImage.src = `images/${result.image}?t=${new Date().getTime()}`;
-        resultTypeName.textContent = result.name;
-        resultMetaTier.textContent = result.metaTier;
-        resultDescription.innerText = result.description;
-        resultCompatibility.textContent = result.compatibility;
+        try {
+            const result = calculateResult();
 
-        userTierDisplay.innerHTML = '';
-        const tierListClone = document.getElementById('capture-tier-list').cloneNode(true);
-        tierListClone.removeAttribute('id');
-        userTierDisplay.appendChild(tierListClone);
+            resultImage.src = `images/${result.image}?t=${new Date().getTime()}`;
+            resultTypeName.textContent = result.name;
+            resultMetaTier.textContent = result.metaTier;
+            resultDescription.innerText = result.description;
+            resultCompatibility.textContent = result.compatibility;
 
-        renderAllTypesTierList();
+            userTierDisplay.innerHTML = '';
+            
+            // 事前にティア表を画像化しておく
+            const captureTarget = document.getElementById('capture-tier-list');
+            const canvas = await html2canvas(captureTarget, {
+                backgroundColor: '#1a1a1a',
+                scale: 2,
+                useCORS: true
+            });
+            
+            // Blobとして保持
+            window.generatedTierBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            
+            const imgUrl = URL.createObjectURL(window.generatedTierBlob);
+            const imgEl = document.createElement('img');
+            imgEl.src = imgUrl;
+            imgEl.style.width = '100%';
+            imgEl.style.borderRadius = '8px';
+            imgEl.style.border = '2px solid var(--border-color)';
+            userTierDisplay.appendChild(imgEl);
 
-        appView.classList.add('hidden');
-        resultView.classList.remove('hidden');
-        window.scrollTo(0, 0);
+            const hintEl = document.createElement('p');
+            hintEl.textContent = '※画像を長押しして保存できます';
+            hintEl.style.fontSize = '0.8rem';
+            hintEl.style.color = 'var(--text-muted)';
+            hintEl.style.textAlign = 'center';
+            hintEl.style.marginTop = '8px';
+            userTierDisplay.appendChild(hintEl);
+
+            renderAllTypesTierList();
+
+            appView.classList.add('hidden');
+            resultView.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        } catch (err) {
+            console.error(err);
+            alert('結果の生成に失敗しました。');
+        } finally {
+            diagnoseBtn.textContent = originalText;
+            diagnoseBtn.disabled = false;
+        }
     });
 
     retryBtn.addEventListener('click', () => {
@@ -536,67 +574,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表`;
         const url = window.location.href; 
         
-        // Twitterの仕様上、動的生成画像を直接URLサムネにできないため、Web Share APIを利用するか画像をダウンロードさせます
-        const targetElement = document.getElementById('user-tier-display');
-        
-        // 処理中であることをユーザーに知らせる（ボタンのテキスト変更など）
         const originalText = shareTwitterBtn.textContent;
-        shareTwitterBtn.textContent = '画像生成中...';
+        shareTwitterBtn.textContent = '共有準備中...';
         shareTwitterBtn.disabled = true;
 
-        // UIの更新を画面に反映させるために少し待機する
         await new Promise(resolve => setTimeout(resolve, 100));
 
         try {
-            const canvas = await html2canvas(targetElement, {
-                backgroundColor: '#1a1a1a',
-                scale: 2,
-                useCORS: true
-            });
+            if (!window.generatedTierBlob) {
+                throw new Error("画像データがありません");
+            }
             
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], 'tier-list.png', { type: 'image/png' });
-                
-                // Web Share API が画像共有をサポートしているかチェック（主にスマホ環境）
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            title: '食のセンス診断',
-                            text: text,
-                            url: url,
-                            files: [file]
-                        });
-                    } catch (err) {
-                        console.log('Share canceled or failed', err);
-                    }
-                } else {
-                    // PCや未対応ブラウザの場合のフォールバック：画像をダウンロードして手動添付を促す
-                    alert('【お知らせ】\nブラウザの制限により、X（Twitter）の投稿に画像を自動添付できません。\n\n今からティア表の画像をダウンロード（保存）しますので、開いたXの投稿画面にて、保存した画像を手動で追加してください！');
-                    
-                    const link = document.createElement('a');
-                    link.download = 'my-value-tier.png';
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    
-                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-                    setTimeout(() => window.open(twitterUrl, '_blank'), 1000);
+            const file = new File([window.generatedTierBlob], 'tier-list.png', { type: 'image/png' });
+            
+            // Web Share API が画像共有をサポートしているかチェック（主にスマホ環境）
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: '食のセンス診断',
+                        text: text,
+                        url: url,
+                        files: [file]
+                    });
+                } catch (err) {
+                    console.log('Share canceled or failed', err);
                 }
+            } else {
+                // PCや未対応ブラウザの場合のフォールバック
+                alert('【お知らせ】\nブラウザの制限により、X（Twitter）の投稿に画像を自動添付できません。\n\n長押し等で画像を保存し、手動でXに追加してください！');
                 
-                // ボタンを元に戻す
-                shareTwitterBtn.textContent = originalText;
-                shareTwitterBtn.disabled = false;
-            });
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                setTimeout(() => window.open(twitterUrl, '_blank'), 500);
+            }
         } catch (error) {
             console.error('画像の生成に失敗しました', error);
-            alert('画像の生成に失敗しました。');
+            alert('共有に失敗しました。');
+        } finally {
             shareTwitterBtn.textContent = originalText;
             shareTwitterBtn.disabled = false;
         }
     });
 
     downloadImgBtn.addEventListener('click', async () => {
-        const targetElement = document.getElementById('user-tier-display');
-        
         const originalText = downloadImgBtn.textContent;
         downloadImgBtn.textContent = '画像保存中...';
         downloadImgBtn.disabled = true;
@@ -604,22 +623,18 @@ document.addEventListener('DOMContentLoaded', () => {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         try {
-            const canvas = await html2canvas(targetElement, {
-                backgroundColor: '#1a1a1a',
-                scale: 2,
-                useCORS: true
-            });
+            if (!window.generatedTierBlob) {
+                throw new Error("画像データがありません");
+            }
             
             const link = document.createElement('a');
             link.download = 'my-value-tier.png';
-            link.href = canvas.toDataURL('image/png');
+            link.href = URL.createObjectURL(window.generatedTierBlob);
             link.click();
-
-            downloadImgBtn.textContent = originalText;
-            downloadImgBtn.disabled = false;
         } catch (error) {
             console.error('画像の生成に失敗しました', error);
-            alert('画像の生成に失敗しました。');
+            alert('画像のダウンロードに失敗しました。');
+        } finally {
             downloadImgBtn.textContent = originalText;
             downloadImgBtn.disabled = false;
         }
