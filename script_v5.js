@@ -3,46 +3,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. 初期データの定義
     // ---------------------------------------------------------
     const valueItemsData = [
-        { id: 'item_mac', text: 'マクドナルド', img: 'images/icon_mac.jpg' },
-        { id: 'item_mos', text: 'モスバーガー', img: 'images/icon_mos.jpg' },
-        { id: 'item_kfc', text: 'ケンタッキー', img: 'images/icon_kfc.jpg' },
-        { id: 'item_yoshinoya', text: '吉野家', img: 'images/icon_yoshinoya.jpg' },
-        { id: 'item_sukiya', text: 'すき家', img: 'images/icon_sukiya.png' },
-        { id: 'item_matsuya', text: '松屋', img: 'images/icon_matsuya.png' },
-        { id: 'item_gusto', text: 'ガスト', img: 'images/icon_gusto.png' },
-        { id: 'item_saizeriya', text: 'サイゼリヤ', img: 'images/icon_saizeriya.jpg' },
-        { id: 'item_bikkuri', text: 'びっくりドンキー', img: 'images/icon_bikkuri.jpg' },
-        { id: 'item_ootoya', text: '大戸屋', img: 'images/icon_ootoya.jpg' },
-        { id: 'item_yayoiken', text: 'やよい軒', img: 'images/icon_yayoiken.jpg' },
-        { id: 'item_sushiro', text: 'スシロー', img: 'images/icon_sushiro.svg' },
-        { id: 'item_kura', text: 'くら寿司', img: 'images/icon_kura.jpg' },
-        { id: 'item_marugame', text: '丸亀製麺', img: 'images/icon_marugame.svg' },
-        { id: 'item_tenkaippin', text: '天下一品', img: 'images/icon_tenkaippin.jpg' },
-        { id: 'item_oushou', text: '餃子の王将', img: 'images/icon_oushou.jpg' },
-        { id: 'item_cocoichi', text: 'CoCo壱番屋', img: 'images/icon_cocoichi.jpg' },
-        { id: 'item_starbucks', text: 'スターバックス', img: 'images/icon_starbucks.png' },
-        { id: 'item_komeda', text: 'コメダ珈琲店', img: 'images/icon_komeda.jpg' },
-        { id: 'item_misdo', text: 'ミスタードーナツ', img: 'images/icon_misdo.jpg' },
+        { id: 'item_mac', text: 'マクドナルド', img: 'images/icon_mac.jpg?v=2' },
+        { id: 'item_mos', text: 'モスバーガー', img: 'images/icon_mos.jpg?v=2' },
+        { id: 'item_kfc', text: 'ケンタッキー', img: 'images/icon_kfc.jpg?v=2' },
+        { id: 'item_yoshinoya', text: '吉野家', img: 'images/icon_yoshinoya.jpg?v=2' },
+        { id: 'item_sukiya', text: 'すき家', img: 'images/icon_sukiya.png?v=2' },
+        { id: 'item_matsuya', text: '松屋', img: 'images/icon_matsuya.png?v=2' },
+        { id: 'item_gusto', text: 'ガスト', img: 'images/icon_gusto.png?v=2' },
+        { id: 'item_saizeriya', text: 'サイゼリヤ', img: 'images/icon_saizeriya.jpg?v=2' },
+        { id: 'item_bikkuri', text: 'びっくりドンキー', img: 'images/icon_bikkuri.jpg?v=2' },
+        { id: 'item_ootoya', text: '大戸屋', img: 'images/icon_ootoya.jpg?v=2' },
+        { id: 'item_yayoiken', text: 'やよい軒', img: 'images/icon_yayoiken.jpg?v=2' },
+        { id: 'item_sushiro', text: 'スシロー', img: 'images/icon_sushiro.svg?v=2' },
+        { id: 'item_kura', text: 'くら寿司', img: 'images/icon_kura.jpg?v=2' },
+        { id: 'item_marugame', text: '丸亀製麺', img: 'images/icon_marugame.svg?v=2' },
+        { id: 'item_tenkaippin', text: '天下一品', img: 'images/icon_tenkaippin.jpg?v=2' },
+        { id: 'item_oushou', text: '餃子の王将', img: 'images/icon_oushou.jpg?v=2' },
+        { id: 'item_cocoichi', text: 'CoCo壱番屋', img: 'images/icon_cocoichi.jpg?v=2' },
+        { id: 'item_starbucks', text: 'スターバックス', img: 'images/icon_starbucks.png?v=2' },
+        { id: 'item_komeda', text: 'コメダ珈琲店', img: 'images/icon_komeda.jpg?v=2' },
+        { id: 'item_misdo', text: 'ミスタードーナツ', img: 'images/icon_misdo.jpg?v=2' },
 
-        { id: 'item_nakau', text: 'なか卯', img: 'images/icon_nakau.png' },
-        { id: 'item_hamasushi', text: 'はま寿司', img: 'images/icon_hamasushi.png' },
-        { id: 'item_kappasushi', text: 'かっぱ寿司', img: 'images/icon_kappasushi.png' },
-        { id: 'item_ringerhut', text: 'リンガーハット', img: 'images/icon_ringerhut.png' },
-        { id: 'item_joyfull', text: 'ジョイフル', img: 'images/icon_joyfull.png' },
-        { id: 'item_bamiyan', text: 'バーミヤン', img: 'images/icon_bamiyan.png' },
-        { id: 'item_lotteria', text: 'ロッテリア', img: 'images/icon_lotteria.png' },
-        { id: 'item_subway', text: 'サブウェイ', img: 'images/icon_subway.png' },
-        { id: 'item_doutor', text: 'ドトールコーヒー', img: 'images/icon_doutor.png' },
-        { id: 'item_tullys', text: 'タリーズコーヒー', img: 'images/icon_tullys.png' },
+        { id: 'item_nakau', text: 'なか卯', img: 'images/icon_nakau.png?v=2' },
+        { id: 'item_hamasushi', text: 'はま寿司', img: 'images/icon_hamasushi.png?v=2' },
+        { id: 'item_kappasushi', text: 'かっぱ寿司', img: 'images/icon_kappasushi.png?v=2' },
+        { id: 'item_ringerhut', text: 'リンガーハット', img: 'images/icon_ringerhut.png?v=2' },
+        { id: 'item_joyfull', text: 'ジョイフル', img: 'images/icon_joyfull.png?v=2' },
+        { id: 'item_bamiyan', text: 'バーミヤン', img: 'images/icon_bamiyan.png?v=2' },
+        { id: 'item_lotteria', text: 'ロッテリア', img: 'images/icon_lotteria.png?v=2' },
+        { id: 'item_subway', text: 'サブウェイ', img: 'images/icon_subway.png?v=2' },
+        { id: 'item_doutor', text: 'ドトールコーヒー', img: 'images/icon_doutor.png?v=2' },
+        { id: 'item_tullys', text: 'タリーズコーヒー', img: 'images/icon_tullys.png?v=2' },
 
-        { id: 'item_dennys', text: 'デニーズ', img: 'images/icon_dennys.jpg' },
-        { id: 'item_ikinari', text: 'いきなり！ステーキ', img: 'images/icon_ikinari.jpg' },
-        { id: 'item_burgerking', text: 'バーガーキング', img: 'images/icon_burgerking.jpg' },
-        { id: 'item_royalhost', text: 'ロイヤルホスト', img: 'images/icon_royalhost.jpg' },
-        { id: 'item_katsuya', text: 'かつや', img: 'images/icon_katsuya.jpg' },
-        { id: 'item_cocos', text: 'ココス', img: 'images/icon_cocos.jpg' },
-        { id: 'item_hidakaya', text: '日高屋', img: 'images/icon_hidakaya_new.jpg' },
-        { id: 'item_pepper', text: 'ペッパーランチ', img: 'images/icon_pepper.jpg' }
+        { id: 'item_dennys', text: 'デニーズ', img: 'images/icon_dennys.jpg?v=2' },
+        { id: 'item_ikinari', text: 'いきなり！ステーキ', img: 'images/icon_ikinari.jpg?v=2' },
+        { id: 'item_burgerking', text: 'バーガーキング', img: 'images/icon_burgerking.jpg?v=2' },
+        { id: 'item_royalhost', text: 'ロイヤルホスト', img: 'images/icon_royalhost.jpg?v=2' },
+        { id: 'item_katsuya', text: 'かつや', img: 'images/icon_katsuya.jpg?v=2' },
+        { id: 'item_cocos', text: 'ココス', img: 'images/icon_cocos.jpg?v=2' },
+        { id: 'item_hidakaya', text: '日高屋', img: 'images/icon_hidakaya_new.jpg?v=2' },
+        { id: 'item_pepper', text: 'ペッパーランチ', img: 'images/icon_pepper.jpg?v=2' }
     ];
 
         const typeMasterData = {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【ファミレス・ドリンクバーの主】とは価値観を完全に共有できる最高の相性。`,
             compatibility: '【ファミレス・ドリンクバーの主】',
-            image: 'type_1.jpg'
+            image: 'type_1.jpg?v=2'
         },
         'TYPE_2': {
             name: '【自称・違いがわかる美食家】',
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【健康志向オーガニック幻想民】とは互いの意識の高さを褒め合える良い相性。`,
             compatibility: '【健康志向オーガニック幻想民】',
-            image: 'type_2.jpg'
+            image: 'type_2.jpg?v=2'
         },
         'TYPE_3': {
             name: '【茶色い炭水化物依存症】',
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【麺類すすりマシーン】とは食のテンポが合い、無言で一心不乱に食べ合える。`,
             compatibility: '【麺類すすりマシーン】',
-            image: 'type_3.jpg'
+            image: 'type_3.jpg?v=2'
         },
         'TYPE_4': {
             name: '【和食・定食絶対防衛戦線】',
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【牛丼三国志の軍師】とは、互いのルーティンを乱さないため非常に相性が良い。`,
             compatibility: '【牛丼三国志の軍師】',
-            image: 'type_4.jpg'
+            image: 'type_4.jpg?v=2'
         },
         'TYPE_5': {
             name: '【深夜の背徳ハイエナ】',
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【茶色い炭水化物依存症】と一緒に深夜の街へ繰り出せば最強の共犯者になれる。`,
             compatibility: '【茶色い炭水化物依存症】',
-            image: 'type_5.jpg'
+            image: 'type_5.jpg?v=2'
         },
         'TYPE_6': {
             name: '【カフェイン・ノマドワーカー】',
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【ファミレス・ドリンクバーの主】と長居する才能において完全に意気投合する。`,
             compatibility: '【ファミレス・ドリンクバーの主】',
-            image: 'type_6.jpg'
+            image: 'type_6.jpg?v=2'
         },
         'TYPE_7': {
             name: '【回転寿司ルーレットギャンブラー】',
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【期間限定メニュー・ハンター】となら、お互いの好奇心を存分に満たし合える。`,
             compatibility: '【期間限定メニュー・ハンター】',
-            image: 'type_7.jpg'
+            image: 'type_7.jpg?v=2'
         },
         'TYPE_8': {
             name: '【肉食系ファミリーハンター】',
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【コスパ至上主義バグ太郎】となら、予算を気にせず豪快に食事ができる。`,
             compatibility: '【コスパ至上主義バグ太郎】',
-            image: 'type_8.jpg'
+            image: 'type_8.jpg?v=2'
         },
         'TYPE_9': {
             name: '【麺類すすりマシーン】',
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【和食・定食絶対防衛戦線】の安定感と、自身のスピード感が絶妙に噛み合う。`,
             compatibility: '【和食・定食絶対防衛戦線】',
-            image: 'type_9.jpg'
+            image: 'type_9.jpg?v=2'
         },
         'TYPE_10': {
             name: '【カレー・スパイス狂信者】',
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【究極の雑食キメラ】のなんでも受け入れる懐の深さに、自身のこだわりをぶつけられる。`,
             compatibility: '【究極の雑食キメラ】',
-            image: 'type_10.jpg'
+            image: 'type_10.jpg?v=2'
         },
         'TYPE_11': {
             name: '【スイーツ女子力偽装兵】',
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【自称・違いがわかる美食家】となら、互いに映えるカフェ巡りを楽しめる。`,
             compatibility: '【自称・違いがわかる美食家】',
-            image: 'type_11.jpg'
+            image: 'type_11.jpg?v=2'
         },
         'TYPE_12': {
             name: '【牛丼三国志の軍師】',
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【麺類すすりマシーン】と共に行動すれば、最強の効率的ランチタイムを構築できる。`,
             compatibility: '【麺類すすりマシーン】',
-            image: 'type_12.jpg'
+            image: 'type_12.jpg?v=2'
         },
         'TYPE_13': {
             name: '【ファミレス・ドリンクバーの主】',
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【カフェイン・ノマドワーカー】と相席すれば、お互いに一生居座り続けることができる。`,
             compatibility: '【カフェイン・ノマドワーカー】',
-            image: 'type_13.jpg'
+            image: 'type_13.jpg?v=2'
         },
         'TYPE_14': {
             name: '【健康志向オーガニック幻想民】',
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【自称・違いがわかる美食家】となら、意識の高い食生活について語り合える。`,
             compatibility: '【自称・違いがわかる美食家】',
-            image: 'type_14.jpg'
+            image: 'type_14.jpg?v=2'
         },
         'TYPE_15': {
             name: '【期間限定メニュー・ハンター】',
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【回転寿司ルーレットギャンブラー】となら、新作が出るたびに一緒に盛り上がれる。`,
             compatibility: '【回転寿司ルーレットギャンブラー】',
-            image: 'type_15.jpg'
+            image: 'type_15.jpg?v=2'
         },
         'TYPE_16': {
             name: '【究極の雑食キメラ】',
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ▼ベストパートナー
 🤝【カレー・スパイス狂信者】の強烈なこだわりすらも、独自のアレンジで包み込むことができる。`,
             compatibility: '【カレー・スパイス狂信者】',
-            image: 'type_16.jpg'
+            image: 'type_16.jpg?v=2'
         }
     };
 
@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.className = 'meta-tier-icon-wrapper';
                 
                 const img = document.createElement('img');
-                img.src = `images/${typeMasterData[typeKey].image}`;
+                img.src = `images/${typeMasterData[typeKey].image}?v=2`;
                 img.className = 'meta-tier-icon';
                 img.alt = typeMasterData[typeKey].name;
                 
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error("画像データがありません");
             }
             
-            const file = new File([window.generatedTierBlob], 'tier-list.png', { type: 'image/png' });
+            const file = new File([window.generatedTierBlob], 'tier-list.png?v=2', { type: 'image/png' });
             
             // Web Share API が画像共有をサポートしているかチェック（主にスマホ環境）
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const link = document.createElement('a');
-            link.download = 'my-value-tier.png';
+            link.download = 'my-value-tier.png?v=2';
             link.href = URL.createObjectURL(window.generatedTierBlob);
             link.click();
         } catch (error) {
