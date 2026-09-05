@@ -597,18 +597,38 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo(0, 0);
     });
 
-    shareTwitterBtn.addEventListener('click', () => {
+    shareTwitterBtn.addEventListener('click', async () => {
         const typeName = resultTypeName.textContent;
         const metaTier = resultMetaTier.textContent;
         const url = window.location.href; 
         const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n${url}`;
         
-        // Twitterの仕様（バグ）により、Web Share API経由でURLと画像を同時に渡すと
-        // 画像が消える、またはURLが消える問題が頻発するため、手動添付を促す方式に一本化
-        alert('【お知らせ】\nX（Twitter）アプリの仕様により、画像とURLを同時に自動添付することができません。\n\n画面上のティア表画像を長押しして保存し、Xの投稿画面で手動で貼り付けてください！');
-        
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-        setTimeout(() => window.open(twitterUrl, '_blank'), 500);
+        const originalText = shareTwitterBtn.textContent;
+        shareTwitterBtn.textContent = '共有準備中...';
+        shareTwitterBtn.disabled = true;
+
+        try {
+            if (!window.generatedTierBlob) throw new Error("画像データがありません");
+            
+            // Web Share APIだと「画像が消える」か「URLが消える」バグがX側にあるため、
+            // クリップボードに画像をコピーして、ユーザーにペーストしてもらう方式を採用
+            if (navigator.clipboard && window.ClipboardItem) {
+                const item = new ClipboardItem({ 'image/png': window.generatedTierBlob });
+                await navigator.clipboard.write([item]);
+                alert('【お知らせ】\n✅ ティア表の画像をクリップボードにコピーしました！\n\nX（Twitter）アプリの仕様上、画像とURLの自動同時添付ができないため、\n投稿画面が開いたらテキスト入力欄をタップして「ペースト（貼り付け）」し、画像を添付してください！');
+            } else {
+                alert('【お知らせ】\nX（Twitter）アプリの仕様上、画像とURLの自動同時添付ができません。\n\n画面上のティア表画像を長押しして保存し、Xの投稿画面で手動で添付してください！');
+            }
+        } catch (error) {
+            console.error('Clipboard error:', error);
+            alert('【お知らせ】\n画像の自動コピーに失敗しました。\n画面上の画像を長押しして保存し、Xの投稿画面で手動で添付してください！');
+        } finally {
+            shareTwitterBtn.textContent = originalText;
+            shareTwitterBtn.disabled = false;
+            
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(twitterUrl, '_blank');
+        }
     });
 
     downloadImgBtn.addEventListener('click', async () => {
