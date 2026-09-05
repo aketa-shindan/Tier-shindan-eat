@@ -431,80 +431,103 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
     // 4. 診断ロジック (スコア計算)
     // ---------------------------------------------------------
-    const tierScores = { 'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1 };
+    const typeMappings = {
+        'TYPE_1': ['item_saizeriya', 'item_mac'],
+        'TYPE_2': ['item_mos', 'item_starbucks', 'item_subway', 'item_doutor'],
+        'TYPE_3': ['item_oushou', 'item_tenkaippin', 'item_ikinari', 'item_pepper'],
+        'TYPE_4': ['item_ootoya', 'item_yayoiken'],
+        'TYPE_5': ['item_sukiya', 'item_matsuya'],
+        'TYPE_6': ['item_komeda', 'item_tullys', 'item_lotteria'],
+        'TYPE_7': ['item_sushiro', 'item_kura', 'item_hamasushi', 'item_kappasushi'],
+        'TYPE_8': ['item_bikkuri', 'item_kfc'],
+        'TYPE_9': ['item_marugame', 'item_nakau', 'item_ringerhut'],
+        'TYPE_10': ['item_cocoichi'],
+        'TYPE_11': ['item_misdo', 'item_royalhost'],
+        'TYPE_12': ['item_yoshinoya', 'item_matsuya', 'item_nakau'],
+        'TYPE_13': ['item_gusto', 'item_joyfull', 'item_bamiyan', 'item_dennys', 'item_katsuya'],
+        'TYPE_14': ['item_cocos', 'item_subway'],
+        'TYPE_15': ['item_burgerking', 'item_hidakaya', 'item_mac']
+    };
 
     function calculateResult() {
-        const scores = {};
+        // S〜Aは加点、C〜Dは減点することで、上位・下位への偏りを両方評価する
+        const tierWeights = { 'S': 3, 'A': 1, 'B': 0, 'C': -1, 'D': -3 };
+        const itemWeights = {};
+        
         dropzones.forEach(zone => {
             const tier = zone.dataset.tier;
-            const score = tierScores[tier];
+            const weight = tierWeights[tier];
             const items = zone.querySelectorAll('.value-item');
-            items.forEach(item => scores[item.dataset.id] = score);
+            items.forEach(item => itemWeights[item.dataset.id] = weight);
         });
 
-        let typeKey = 'TYPE_16';
+        let maxScore = -9999;
+        let bestType = 'TYPE_16';
 
-        if ((scores['item_saizeriya']||0) >= 4 && (scores['item_mac']||0) >= 4) typeKey = 'TYPE_1';
-        else if ((scores['item_mos']||0) >= 4 && (scores['item_starbucks']||0) >= 4) typeKey = 'TYPE_2';
-        else if ((scores['item_oushou']||0) >= 4 || (scores['item_tenkaippin']||0) >= 4) typeKey = 'TYPE_3';
-        else if ((scores['item_ootoya']||0) >= 4 && (scores['item_yayoiken']||0) >= 4) typeKey = 'TYPE_4';
-        else if ((scores['item_sukiya']||0) >= 4 || (scores['item_matsuya']||0) >= 4) typeKey = 'TYPE_5';
-        else if ((scores['item_starbucks']||0) >= 4 || (scores['item_komeda']||0) >= 4) typeKey = 'TYPE_6';
-        else if ((scores['item_sushiro']||0) >= 4 || (scores['item_kura']||0) >= 4) typeKey = 'TYPE_7';
-        else if ((scores['item_bikkuri']||0) >= 4 || (scores['item_kfc']||0) >= 4) typeKey = 'TYPE_8';
-        else if ((scores['item_marugame']||0) >= 4) typeKey = 'TYPE_9';
-        else if ((scores['item_cocoichi']||0) >= 4) typeKey = 'TYPE_10';
-        else if ((scores['item_misdo']||0) >= 4) typeKey = 'TYPE_11';
-        else if ((scores['item_yoshinoya']||0) >= 4 && (scores['item_matsuya']||0) >= 4) typeKey = 'TYPE_12';
-        else if ((scores['item_gusto']||0) >= 4) typeKey = 'TYPE_13';
-        else if ((scores['item_ootoya']||0) >= 4) typeKey = 'TYPE_14';
-        
-        else if ((scores['item_nakau']||0) >= 4 || (scores['item_ringerhut']||0) >= 4) typeKey = 'TYPE_12';
-        else if ((scores['item_subway']||0) >= 4 || (scores['item_doutor']||0) >= 4) typeKey = 'TYPE_2';
-        else if ((scores['item_hamasushi']||0) >= 4 || (scores['item_kappasushi']||0) >= 4) typeKey = 'TYPE_7';
-        else if ((scores['item_joyfull']||0) >= 4 || (scores['item_bamiyan']||0) >= 4) typeKey = 'TYPE_13';
-        else if ((scores['item_lotteria']||0) >= 4 || (scores['item_tullys']||0) >= 4) typeKey = 'TYPE_6';
-        
-        else if ((scores['item_ikinari']||0) >= 4 || (scores['item_pepper']||0) >= 4) typeKey = 'TYPE_3';
-        else if ((scores['item_royalhost']||0) >= 4 || (scores['item_misdo']||0) >= 4) typeKey = 'TYPE_11';
-        else if ((scores['item_dennys']||0) >= 4 || (scores['item_katsuya']||0) >= 4) typeKey = 'TYPE_13';
-        else if ((scores['item_cocos']||0) >= 4) typeKey = 'TYPE_14';
-        else if ((scores['item_burgerking']||0) >= 4 || (scores['item_hidakaya']||0) >= 4) typeKey = 'TYPE_15';
-        else if ((scores['item_mac']||0) >= 4) typeKey = 'TYPE_15';
-        else if ((scores['item_saizeriya']||0) >= 4) typeKey = 'TYPE_1';
-        else typeKey = 'TYPE_16';
+        for (const [type, items] of Object.entries(typeMappings)) {
+            let score = 0;
+            let count = 0;
+            items.forEach(itemId => {
+                if (itemWeights[itemId] !== undefined) {
+                    score += itemWeights[itemId];
+                    count++;
+                }
+            });
+            
+            // 平均スコアで競う（配置されていない場合は0点扱い）
+            // 同点の場合は、より多くの関連店舗を配置したタイプが勝つように微小なボーナス(count * 0.1)を加算
+            let avgScore = count > 0 ? (score / count) + (count * 0.1) : 0;
+            
+            if (avgScore > maxScore) {
+                maxScore = avgScore;
+                bestType = type;
+            }
+        }
 
-        return typeMasterData[typeKey];
+        // 全体的にマイナス評価ばかりなら雑食（デフォルト）
+        if (maxScore <= 0) {
+            bestType = 'TYPE_16';
+        }
+
+        return typeMasterData[bestType];
     }
 
     // ---------------------------------------------------------
-    // 5. 16タイプのメタティア表の生成
+    // 5. DOM構築・初期化
     // ---------------------------------------------------------
     function renderAllTypesTierList() {
-        const metaTiers = {
-            'S+': ['TYPE_4'],
-            'S': ['TYPE_1', 'TYPE_9', 'TYPE_11'],
-            'A': ['TYPE_2', 'TYPE_5', 'TYPE_8', 'TYPE_13', 'TYPE_16'],
-            'B': ['TYPE_3', 'TYPE_6', 'TYPE_7', 'TYPE_12', 'TYPE_15'],
-            'C': ['TYPE_10', 'TYPE_14']
+        allTypesTierDisplay.innerHTML = '';
+        const typesByTier = { 'S': [], 'A': [], 'B': [], 'C': [], 'D': [] };
+        
+        for (const [key, data] of Object.entries(typeMasterData)) {
+            if (data.metaTier.includes('S')) typesByTier['S'].push(key);
+            else if (data.metaTier.includes('A')) typesByTier['A'].push(key);
+            else if (data.metaTier.includes('B')) typesByTier['B'].push(key);
+            else if (data.metaTier.includes('C')) typesByTier['C'].push(key);
+            else if (data.metaTier.includes('D')) typesByTier['D'].push(key);
+        }
+
+        const tierColors = {
+            'S': 'var(--tier-s)',
+            'A': 'var(--tier-a)',
+            'B': 'var(--tier-b)',
+            'C': 'var(--tier-c)',
+            'D': 'var(--tier-d)'
         };
 
-        allTypesTierDisplay.innerHTML = '';
-        
-        for (const [tier, types] of Object.entries(metaTiers)) {
+        for (const tier of ['S', 'A', 'B', 'C', 'D']) {
             const row = document.createElement('div');
-            row.className = 'tier-row';
+            row.className = 'meta-tier-row';
             
             const label = document.createElement('div');
-            label.className = `tier-row__label`;
-            label.style.backgroundColor = `var(--tier-${tier.toLowerCase().replace('+','')})`;
+            label.className = 'meta-tier-label';
             label.textContent = tier;
+            label.style.backgroundColor = tierColors[tier];
             
             const itemsContainer = document.createElement('div');
-            itemsContainer.className = 'tier-row__dropzone';
-            itemsContainer.style.flexWrap = 'wrap';
+            itemsContainer.className = 'meta-tier-items';
             
-            types.forEach(typeKey => {
+            typesByTier[tier].forEach(typeKey => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'meta-tier-icon-wrapper';
                 
@@ -601,33 +624,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const typeName = resultTypeName.textContent;
         const metaTier = resultMetaTier.textContent;
         const url = window.location.href; 
-        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n${url}`;
+        
+        // 意図的にtext内からURLを外し、iOSの共有シートで画像が消えるバグを回避する
+        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n\n診断はこちら👇`;
         
         const originalText = shareTwitterBtn.textContent;
         shareTwitterBtn.textContent = '共有準備中...';
         shareTwitterBtn.disabled = true;
 
+        await new Promise(resolve => setTimeout(resolve, 50));
+
         try {
             if (!window.generatedTierBlob) throw new Error("画像データがありません");
             
-            // Web Share APIだと「画像が消える」か「URLが消える」バグがX側にあるため、
-            // クリップボードに画像をコピーして、ユーザーにペーストしてもらう方式を採用
-            if (navigator.clipboard && window.ClipboardItem) {
-                const item = new ClipboardItem({ 'image/png': window.generatedTierBlob });
-                await navigator.clipboard.write([item]);
-                alert('【お知らせ】\n✅ ティア表の画像をクリップボードにコピーしました！\n\nX（Twitter）アプリの仕様上、画像とURLの自動同時添付ができないため、\n投稿画面が開いたらテキスト入力欄をタップして「ペースト（貼り付け）」し、画像を添付してください！');
+            const file = new File([window.generatedTierBlob], 'tier-list.png', { type: 'image/png' });
+            
+            // Web Share APIを使用してネイティブの共有シートを呼び出す
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    text: text,
+                    url: url,
+                    files: [file]
+                });
             } else {
-                alert('【お知らせ】\nX（Twitter）アプリの仕様上、画像とURLの自動同時添付ができません。\n\n画面上のティア表画像を長押しして保存し、Xの投稿画面で手動で添付してください！');
+                // 未対応ブラウザ用フォールバック
+                alert('【お知らせ】\nご利用の環境では画像の自動添付ができません。画面上の画像を長押しして保存し、Xで手動添付してください！');
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text + '\n' + url)}`;
+                window.open(twitterUrl, '_blank');
             }
         } catch (error) {
-            console.error('Clipboard error:', error);
-            alert('【お知らせ】\n画像の自動コピーに失敗しました。\n画面上の画像を長押しして保存し、Xの投稿画面で手動で添付してください！');
+            console.error('Share canceled or failed:', error);
         } finally {
             shareTwitterBtn.textContent = originalText;
             shareTwitterBtn.disabled = false;
-            
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(twitterUrl, '_blank');
         }
     });
 
