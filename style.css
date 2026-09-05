@@ -590,14 +590,19 @@ body {
 
 @media (max-width: 600px) {
     /* ティア表内のアイコンを最大3行に収めつつ、アイテム数に応じて自動縮小する */
+    .tier-row {
+        min-height: 50px; /* スマホでは空の行の縦幅をコンパクトに */
+    }
     .tier-row__label {
         flex-shrink: 0;
+        width: 40px; /* スマホではラベルも少し細く */
+        font-size: 1rem;
     }
     .tier-row__dropzone {
         display: grid;
         grid-template-columns: repeat(var(--cols, 4), 1fr);
-        gap: 4px;
-        padding: 6px;
+        gap: 2px;
+        padding: 4px;
         align-content: start;
     }
     
