@@ -571,8 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
     shareTwitterBtn.addEventListener('click', async () => {
         const typeName = resultTypeName.textContent;
         const metaTier = resultMetaTier.textContent;
-        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表`;
         const url = window.location.href; 
+        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n${url}`;
         
         const originalText = shareTwitterBtn.textContent;
         shareTwitterBtn.textContent = '共有準備中...';
@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // PCや未対応ブラウザの場合のフォールバック
                 alert('【お知らせ】\nブラウザの制限により、X（Twitter）の投稿に画像を自動添付できません。\n\n長押し等で画像を保存し、手動でXに追加してください！');
                 
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
                 setTimeout(() => window.open(twitterUrl, '_blank'), 500);
             }
         } catch (error) {
