@@ -162,6 +162,7 @@ body {
     /* overflow: hidden; を削除（ツールチップが外にはみ出せるようにするため） */
     border: 1px solid var(--border-color);
     min-height: 90px; /* アイコンが1列でも最低限の高さを確保しつつ、増えれば自動で伸びる */
+    cursor: pointer;
 }
 
 .tier-row:last-child {
@@ -204,6 +205,7 @@ body {
     padding: 10px;
     gap: 10px;
     min-height: 80px;
+    cursor: pointer;
 }
 
 /* ==================================================
@@ -239,6 +241,7 @@ body {
     gap: 10px;
     padding: 20px 5px 5px 5px; /* 上部にツールチップ用の余白 */
     justify-content: center;
+    cursor: pointer;
 }
 
 /* ドラッグするアイテム（アイコンメイン） */

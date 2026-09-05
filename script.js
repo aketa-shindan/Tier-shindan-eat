@@ -322,7 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // アイテムが選択されている状態で、ドロップゾーン（ティア欄やプール）をタップした場合
-        const dropzone = e.target.closest('.tier-row__dropzone') || e.target.closest('.item-pool');
+        let dropzone = e.target.closest('.tier-row__dropzone') || e.target.closest('.item-pool');
+        if (!dropzone) {
+            const tierRow = e.target.closest('.tier-row');
+            if (tierRow) {
+                dropzone = tierRow.querySelector('.tier-row__dropzone');
+            }
+        }
         if (dropzone && selectedItem) {
             dropzone.appendChild(selectedItem);
             selectedItem.classList.remove('selected');
@@ -362,7 +368,13 @@ document.addEventListener('DOMContentLoaded', () => {
         animation: 150,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
-        onSort: () => checkDiagnoseButtonState()
+        onSort: () => {
+            if (selectedItem) {
+                selectedItem.classList.remove('selected');
+                selectedItem = null;
+            }
+            checkDiagnoseButtonState();
+        }
     };
 
     new Sortable(itemPool, sortableOptions);
