@@ -225,6 +225,7 @@ body {
 
 .item-pool-section {
     flex-shrink: 0;
+    padding-bottom: 80px; /* 画面下部に余裕を持たせる */
 }
 
 .item-pool-section__title {

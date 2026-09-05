@@ -597,51 +597,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo(0, 0);
     });
 
-    shareTwitterBtn.addEventListener('click', async () => {
+    shareTwitterBtn.addEventListener('click', () => {
         const typeName = resultTypeName.textContent;
         const metaTier = resultMetaTier.textContent;
         const url = window.location.href; 
         const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n${url}`;
         
-        const originalText = shareTwitterBtn.textContent;
-        shareTwitterBtn.textContent = '共有準備中...';
-        shareTwitterBtn.disabled = true;
-
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        try {
-            if (!window.generatedTierBlob) {
-                throw new Error("画像データがありません");
-            }
-            
-            const file = new File([window.generatedTierBlob], 'tier-list.png?v=2', { type: 'image/png' });
-            
-            // Web Share API が画像共有をサポートしているかチェック（主にスマホ環境）
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({
-                        title: '食のセンス診断',
-                        text: text,
-                        url: url,
-                        files: [file]
-                    });
-                } catch (err) {
-                    console.log('Share canceled or failed', err);
-                }
-            } else {
-                // PCや未対応ブラウザの場合のフォールバック
-                alert('【お知らせ】\nブラウザの制限により、X（Twitter）の投稿に画像を自動添付できません。\n\n長押し等で画像を保存し、手動でXに追加してください！');
-                
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-                setTimeout(() => window.open(twitterUrl, '_blank'), 500);
-            }
-        } catch (error) {
-            console.error('画像の生成に失敗しました', error);
-            alert('共有に失敗しました。');
-        } finally {
-            shareTwitterBtn.textContent = originalText;
-            shareTwitterBtn.disabled = false;
-        }
+        // Twitterの仕様（バグ）により、Web Share API経由でURLと画像を同時に渡すと
+        // 画像が消える、またはURLが消える問題が頻発するため、手動添付を促す方式に一本化
+        alert('【お知らせ】\nX（Twitter）アプリの仕様により、画像とURLを同時に自動添付することができません。\n\n画面上のティア表画像を長押しして保存し、Xの投稿画面で手動で貼り付けてください！');
+        
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        setTimeout(() => window.open(twitterUrl, '_blank'), 500);
     });
 
     downloadImgBtn.addEventListener('click', async () => {
