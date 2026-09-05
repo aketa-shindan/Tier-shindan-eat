@@ -544,10 +544,14 @@ document.addEventListener('DOMContentLoaded', () => {
         shareTwitterBtn.textContent = '画像生成中...';
         shareTwitterBtn.disabled = true;
 
+        // UIの更新を画面に反映させるために少し待機する
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         try {
             const canvas = await html2canvas(targetElement, {
                 backgroundColor: '#1a1a1a',
-                scale: 2
+                scale: 2,
+                useCORS: true
             });
             
             canvas.toBlob(async (blob) => {
@@ -593,19 +597,31 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadImgBtn.addEventListener('click', async () => {
         const targetElement = document.getElementById('user-tier-display');
         
+        const originalText = downloadImgBtn.textContent;
+        downloadImgBtn.textContent = '画像保存中...';
+        downloadImgBtn.disabled = true;
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         try {
             const canvas = await html2canvas(targetElement, {
                 backgroundColor: '#1a1a1a',
-                scale: 2
+                scale: 2,
+                useCORS: true
             });
             
             const link = document.createElement('a');
             link.download = 'my-value-tier.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+
+            downloadImgBtn.textContent = originalText;
+            downloadImgBtn.disabled = false;
         } catch (error) {
             console.error('画像の生成に失敗しました', error);
             alert('画像の生成に失敗しました。');
+            downloadImgBtn.textContent = originalText;
+            downloadImgBtn.disabled = false;
         }
     });
 
