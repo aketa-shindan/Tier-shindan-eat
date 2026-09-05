@@ -625,8 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const metaTier = resultMetaTier.textContent;
         const url = window.location.href; 
         
-        // 意図的にtext内からURLを外し、iOSの共有シートで画像が消えるバグを回避する
-        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n\n診断はこちら👇`;
+        const text = `私の食のセンスから導き出されたタイプは${typeName}（${metaTier}）でした！\n\n#食のセンス診断 #チェーン店ティア表\n\n診断はこちら👇\n${url}`;
         
         const originalText = shareTwitterBtn.textContent;
         shareTwitterBtn.textContent = '共有準備中...';
@@ -642,9 +641,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Web Share APIを使用してネイティブの共有シートを呼び出す
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
-                    text: text,
-                    url: url,
-                    files: [file]
+                    text: text, // URLをtext内に含める
+                    files: [file] // urlプロパティは使用しない（iOSでの競合バグを避ける実験）
                 });
             } else {
                 // 未対応ブラウザ用フォールバック
