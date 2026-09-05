@@ -601,8 +601,23 @@ body {
         padding: 6px;
         align-content: start;
     }
+    
+    /* 最初のアイコンプールのタイトルを隠し、上に詰める */
+    .item-pool-section__title {
+        display: none;
+    }
+    
+    /* アイコンプールを6列のグリッドにして縦幅を抑える */
+    .item-pool {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px;
+        padding-top: 5px;
+    }
+
     .tier-row__dropzone .value-item,
-    .tier-row__dropzone .meta-tier-icon-wrapper {
+    .tier-row__dropzone .meta-tier-icon-wrapper,
+    .item-pool .value-item {
         flex: none;
         width: 100%;
         max-width: none;
