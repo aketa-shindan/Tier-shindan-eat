@@ -601,7 +601,8 @@ body {
         padding: 6px;
         align-content: start;
     }
-    .tier-row__dropzone .value-item {
+    .tier-row__dropzone .value-item,
+    .tier-row__dropzone .meta-tier-icon-wrapper {
         flex: none;
         width: 100%;
         max-width: none;
