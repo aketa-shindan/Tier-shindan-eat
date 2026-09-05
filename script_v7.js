@@ -312,10 +312,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedItem = null;
                 return;
             }
-            // 他のアイテムを選択していれば解除してから選択
+            
+            // 何かを選択中に、別のアイテムをタップした場合
             if (selectedItem) {
-                selectedItem.classList.remove('selected');
+                const dropzone = item.closest('.tier-row__dropzone');
+                if (dropzone) {
+                    // タップした先がティア表の中なら、そこにドロップする
+                    dropzone.appendChild(selectedItem);
+                    selectedItem.classList.remove('selected');
+                    selectedItem = null;
+                    checkDiagnoseButtonState();
+                    return;
+                }
+                const poolZone = item.closest('.item-pool');
+                if (poolZone) {
+                    // タップした先がプールの中の場合
+                    if (selectedItem.closest('.tier-row__dropzone')) {
+                        // ティア表からプールに戻す意図
+                        poolZone.appendChild(selectedItem);
+                        selectedItem.classList.remove('selected');
+                        selectedItem = null;
+                        checkDiagnoseButtonState();
+                        return;
+                    } else {
+                        // プール内で別のアイテムを選び直す意図
+                        selectedItem.classList.remove('selected');
+                        selectedItem = item;
+                        item.classList.add('selected');
+                        return;
+                    }
+                }
             }
+
+            // 何も選択していない状態でアイテムをタップしたら選択
             selectedItem = item;
             item.classList.add('selected');
             return;
