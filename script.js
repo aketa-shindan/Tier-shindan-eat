@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // アイテムが選択されている状態で、ドロップゾーン（ティア欄やプール）をタップした場合
-        const dropzone = e.target.closest('.tier-items') || e.target.closest('.item-pool');
+        const dropzone = e.target.closest('.tier-row__dropzone') || e.target.closest('.item-pool');
         if (dropzone && selectedItem) {
             dropzone.appendChild(selectedItem);
             selectedItem.classList.remove('selected');
