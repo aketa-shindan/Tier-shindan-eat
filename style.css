@@ -649,3 +649,19 @@ body {
     box-shadow: 0 0 15px rgba(255, 71, 87, 0.8);
     z-index: 10;
 }
+
+/* フッター（注意事項） */
+.site-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 20px 15px;
+    margin-top: auto;
+    border-top: 1px solid #333;
+    background-color: var(--bg-main);
+    opacity: 0.8;
+}
+.site-footer p {
+    margin: 0;
+    line-height: 1.6;
+}
