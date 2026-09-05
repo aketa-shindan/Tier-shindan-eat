@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.container {
+  display: flex;
+  width: 300px;
+  border: 1px solid black;
+  gap: 5px;
+  flex-wrap: nowrap; /* No wrapping */
+  padding: 5px;
+}
+.item {
+  flex: 1 1 60px; /* Allow shrinking */
+  max-width: 60px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: red;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+</body>
+</html>
