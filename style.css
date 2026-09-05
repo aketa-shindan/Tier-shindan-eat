@@ -604,13 +604,13 @@ body {
     
     /* 最初のアイコンプールのタイトルを隠し、上に詰める */
     .item-pool-section__title {
-        display: none;
+        display: none !important;
     }
     
     /* アイコンプールを6列のグリッドにして縦幅を抑える */
     .item-pool {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
         gap: 4px;
         padding-top: 5px;
     }
