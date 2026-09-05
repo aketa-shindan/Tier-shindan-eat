@@ -386,6 +386,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             diagnoseBtn.setAttribute('disabled', 'true');
         }
+        updateMobileGridCols();
+    }
+
+    function updateMobileGridCols() {
+        dropzones.forEach(zone => {
+            const count = zone.querySelectorAll('.value-item').length;
+            let cols = 4;
+            if (count >= 5) cols = 6;
+            if (count > 18) cols = Math.ceil(count / 3);
+            zone.style.setProperty('--cols', cols);
+        });
     }
 
     // ---------------------------------------------------------

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.container {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), 1fr);
+  width: 300px;
+  border: 1px solid black;
+  gap: 4px;
+  padding: 4px;
+  background: #eee;
+}
+.item {
+  aspect-ratio: 1 / 1;
+  background: red;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div class="container" id="c1"></div><br>
+<div class="container" id="c2"></div><br>
+<div class="container" id="c3"></div><br>
+
+<script>
+function render(id, count) {
+  const c = document.getElementById(id);
+  let cols = 4;
+  if (count >= 5) cols = 6;
+  if (count > 18) cols = Math.ceil(count / 3);
+  
+  c.style.setProperty('--cols', cols);
+  
+  for (let i = 0; i < count; i++) {
+    c.innerHTML += '<div class="item"></div>';
+  }
+}
+
+render('c1', 2);  // Should be size for 4
+render('c2', 15); // Should be size for 6
+render('c3', 25); // cols = 9
+</script>
+</body>
+</html>

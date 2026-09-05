@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.container {
+  display: grid;
+  width: 300px;
+  border: 1px solid black;
+  gap: 4px;
+  padding: 4px;
+  
+  /* Try to force 3 rows and let columns shrink */
+  grid-template-rows: auto auto auto;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+.item {
+  aspect-ratio: 1 / 1;
+  background: red;
+  width: 100%;
+}
+</style>
+</head>
+<body>
+<div class="container" id="c1"></div>
+<script>
+  const c = document.getElementById('c1');
+  for (let i=0; i<4; i++) c.innerHTML += '<div class="item"></div>';
+</script>
+<br>
+<div class="container" id="c2"></div>
+<script>
+  const c2 = document.getElementById('c2');
+  for (let i=0; i<18; i++) c2.innerHTML += '<div class="item"></div>';
+</script>
+<br>
+<div class="container" id="c3"></div>
+<script>
+  const c3 = document.getElementById('c3');
+  for (let i=0; i<30; i++) c3.innerHTML += '<div class="item"></div>';
+</script>
+</body>
+</html>
